@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamTools", "StreamTools\StreamTools.csproj", "{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F2817392-DCDF-4383-94E7-D962D4CEAC2D}
+	EndGlobalSection
+EndGlobal

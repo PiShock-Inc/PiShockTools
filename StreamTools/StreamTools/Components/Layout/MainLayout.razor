@@ -1,0 +1,34 @@
+﻿@inherits LayoutComponentBase
+@layout RootLayout
+<Layout Sider>
+    <LayoutSider>
+        <LayoutSiderContent>
+            <NavMenu />
+        </LayoutSiderContent>
+    </LayoutSider>
+        <Layout>
+            <LayoutHeader Fixed>
+                <Bar Background="Background.Dark"
+                     ThemeContrast="ThemeContrast.Dark"
+                     Mode="BarMode.Horizontal"
+                     Breakpoint="Breakpoint.Desktop"
+                     NavigationBreakpoint="Breakpoint.Tablet">
+                    <BarBrand>
+                        Pi-Shock
+                    </BarBrand>
+                    <BarMenu>
+                    <BarStart>
+                        <BarItem>
+                            <BarLink To="" Match="Match.All">
+                                Home <BarIcon IconName="IconName.Dashboard"/>
+                            </BarLink>
+                        </BarItem>
+                    </BarStart>
+                    </BarMenu>
+                </Bar>
+            </LayoutHeader>
+            <LayoutContent Padding="Padding.Is4.OnX">
+                @Body
+            </LayoutContent>
+        </Layout>
+</Layout>

@@ -1,0 +1,52 @@
+﻿<Card VerticalAlignment="VerticalAlignment.Middle" 
+      Flex="Flex.AlignItems.Center">
+    <CardBody>
+        <CardTitle Size="3">
+            Log in to get started
+        </CardTitle>
+    </CardBody>
+    <CardBody>
+        <Form>
+            <Field>
+                <FieldLabel>Email</FieldLabel>
+                <FieldBody>
+                    <Addons>
+                        <Addon AddonType="AddonType.Start">
+                            <AddonLabel>
+                                <Icon Name="IconName.Mail" />
+                            </AddonLabel>
+                            <Addon AddonType="AddonType.Body">
+                                <TextEdit Role="TextRole.Email" Autofocus="true" Placeholder="@("you@somewebsite.com")" @bind-Text="email" />
+                            </Addon>
+                        </Addon>
+                    </Addons>
+                </FieldBody>
+            </Field>
+            <Field>
+                <FieldLabel>Password</FieldLabel>
+                <FieldBody>
+                    <Addons>
+                        <Addon AddonType="AddonType.Start">
+                            <AddonLabel>
+                                <Icon Name="IconName.Lock" />
+                            </AddonLabel>
+                            <Addon AddonType="AddonType.Body">
+                                <TextEdit Role="TextRole.Password" @bind-Text="password" />
+                            </Addon>
+                        </Addon>
+                    </Addons>
+                </FieldBody>
+            </Field>
+        </Form>
+    </CardBody>
+    <CardActions>
+        <Button Type="ButtonType.Submit" Color="Color.Primary" Shadow="Shadow.Default">
+            Login <Icon Name="IconName.LockOpen" />
+        </Button>
+    </CardActions>
+</Card>
+@code
+{
+    private string email;
+    private string password;
+}

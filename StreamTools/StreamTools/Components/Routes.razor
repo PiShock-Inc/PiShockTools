@@ -1,0 +1,25 @@
+﻿<Blazorise.ThemeProvider Theme="_theme">
+    <Router AppAssembly="@typeof(MauiProgram).Assembly">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+    </Router>
+    <MessageProvider />
+    <NotificationProvider />
+    <ModalProvider />
+    <ApplicationLoadingIndicator />
+    <PageProgressProvider />
+</Blazorise.ThemeProvider>
+@code
+{
+    private readonly Theme _theme = new()
+    {
+       ColorOptions = new()
+       {
+                Primary = "#79c6db",
+                Dark = "#1e1e1e",
+                Light = "#eeeeee"
+       }
+    };
+}
