@@ -5,6 +5,7 @@ using Blazorise.Material;
 using Serilog;
 using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
+using Blazorise.Icons.FontAwesome;
 
 namespace StreamTools;
 public static class MauiProgram
@@ -43,7 +44,8 @@ public static class MauiProgram
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddBlazorise(options => options.Immediate = true)
                 .AddMaterialProviders()
-                .AddMaterialIcons();
+                .AddMaterialIcons()
+                .AddFontAwesomeIcons();
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
