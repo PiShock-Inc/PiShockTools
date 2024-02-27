@@ -7,13 +7,28 @@ using System.Threading.Tasks;
 
 namespace StreamTools.Components.Models
 {
-    public class Cheer(string keyword, int[] shockers, int minimumCheer, OperationMethod method, int intensity, int duration)
+
+    public class Cheer
     {
-        public string Keyword = keyword;
-        public int[] Shockers = shockers;
-        public int MinimumCheer = minimumCheer;
-        public OperationMethod Method = method;
-        public int Intensity = intensity;
-        public int Duration = duration;
-    }
+        public string Keyword;
+        public List<Shocker> Shockers;
+        public int MinimumCheer;
+        public OperationMethod Method;
+        public int Intensity;
+        public int Duration;
+		public bool Warning;
+
+		public Cheer() { }
+
+		public Cheer(string keyword, List<Shocker> shockers, int minimumCheer, OperationMethod method, int intensity, int duration, bool warning)
+		{
+			Keyword = keyword;
+			Shockers = shockers;
+			MinimumCheer = minimumCheer;
+			Method = method;
+			Intensity = intensity;
+			Duration = duration;
+			Warning = warning;
+		}
+	}
 }

@@ -46,46 +46,73 @@
 	<Container Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
 		 <Paragraph>Cheers</Paragraph>
 	 </Container>
-	<DataGrid TItem="Cheer"
-			  CommandMode="DataGridCommandMode.ButtonRow"
+	 <Button Color="Color.Success" Clicked="NewRow">New</Button>
+	<DataGrid @ref="cheerGrid" TItem="Cheer"
+			  CommandMode="DataGridCommandMode.Commands"
 			Editable
 			   EditMode="DataGridEditMode.Cell"
-	        Data="@TestData">
+	        Data="@TestData"
+	        Responsive
+			ShowPager>
+		<ButtonRowTemplate>
+			<Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
+		</ButtonRowTemplate>
 		 <DataGridColumns>
-			 <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="false" CancelCommandAllowed>
-			 <SaveCommandTemplate>
-				 <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+
+				<DataGridColumn Field="@nameof(Cheer.Keyword)" Caption="Keyword" Editable />
+			 <DataGridColumn Field="@nameof(Cheer.Shockers)" Caption="Shockers" Editable>
+				 <EditTemplate>
+					 <DropdownList TItem="Shocker"
+							Data="@TestShockers"
+							TextField="(item) => item.Name"
+							ValueField="(item) => item"
+							SelectionMode="DropdownListSelectionMode.Checkbox"
+							SelectedValues="@((List<Shocker>)context.CellValue)"
+							SelectedValuesChanged="@( v => context.CellValue = v)"
+					TValue="Shocker"> @{
+						var text = "";
+							var value = context.CellValue as List<Shocker>;
+							if (value != null) { 
+								text = String.Join(", ", ((List<Shocker>)context.CellValue).OrderBy(s => s.Name).Select(s => s.Name));
+							}
+							else
+							{
+								text = "Select shocker";
+
+							}
+							@text
+						}</DropdownList>
+				 </EditTemplate>
+				 <DisplayTemplate>
+					@{
+						var value = context.Shockers;
+						@string.Join(", ", value.OrderBy(s => s.Name).Select(s => s.Name));
+					}
+				 </DisplayTemplate>
+			 </DataGridColumn>
+			 <DataGridSelectColumn Field="@nameof(Cheer.Method)" Caption="Method" Data="@MethodItems" ValueField="(x) => ((OperationMethod)x)" TextField="(x) => ((OperationMethod) x).GetName()" Editable />
+			 <DataGridCheckColumn Field="@nameof(Cheer.Warning)" Caption="Warning vibration" Editable />
+			 <DataGridNumericColumn Field="@nameof(Cheer.MinimumCheer)" Caption="Minimum Cheer" Editable />
+			 <DataGridNumericColumn Field="@nameof(Cheer.Intensity)" Caption="Intensity" Editable />
+			 <DataGridNumericColumn Field="@nameof(Cheer.Duration)" Caption="Duration" Editable />
+				<DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="true" CancelCommandAllowed>
+				<SaveCommandTemplate>
+					<Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
 					</SaveCommandTemplate>
 					<CancelCommandTemplate>
 						<Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
 					</CancelCommandTemplate>
-			 </DataGridCommandColumn>
-				<DataGridColumn Field="@nameof(Cheer.Keyword)" Caption="Keyword" Editable />
-			 <DataGridColumn Field="@nameof(Cheer.Shockers)" Caption="Shockers" Editable>
-				<DisplayTemplate>
-					@{
-						var item = context as Cheer;
-						<text>@string.Join(", ", item.Shockers)</text>
-					}
-				</DisplayTemplate>
-			 </DataGridColumn>
-			 <DataGridSelectColumn Field="@nameof(Cheer.Method)" Caption="Method" Editable />
-			 <DataGridNumericColumn Field="@nameof(Cheer.MinimumCheer)" Caption="Minimum Cheer" Editable />
-			 <DataGridNumericColumn Field="@nameof(Cheer.Intensity)" Caption="Intensity" Editable />
-			 <DataGridNumericColumn Field="@nameof(Cheer.Duration)" Caption="Duration" Editable />
+					<DeleteCommandTemplate>
+						<Button ElementId="btnDelete" Color="Color.Danger" Clicked="@context.Clicked">@context.LocalizationString</Button>
+					</DeleteCommandTemplate>
+				</DataGridCommandColumn>
 		 </DataGridColumns>
-		 <ButtonRowTemplate>
-			 <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
-			 <Button Color="Color.Primary" Clicked="context.EditCommand.Clicked">Edit</Button>
-			 <Button Color="Color.Danger" Clicked="context.DeleteCommand.Clicked">Delete</Button>
-			 <Button Color="Color.Link" Clicked="context.ClearFilterCommand.Clicked">Clear Filter</Button>
-		 </ButtonRowTemplate>
 	 </DataGrid>
 }
 @if (!IsNotActive(2))
 {
 	<Container Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-		 <p>Redeems</p>
+		 <Paragraph>Redeems</Paragraph>
 	 </Container>
 }
 
@@ -156,10 +183,46 @@
 		return !isActive[id];
 	}
 
-	public Dictionary<String, String> OperationsOptions = Enum.GetValues(typeof(OperationMethod)).Cast<OperationMethod>().ToDictionary(t => t.ToString(), t => t.ToString());
+	private List<object> MethodItems = Enum.GetValues<OperationMethod>().Select(x => (object)x).ToList();
+
+	public DataGrid<Cheer> cheerGrid;
+
+	public async Task NewRow()
+	{
+		await cheerGrid.New();
+	}
+
+
+	//TEMP
+	public static List<Shocker> TestShockers = new List<Shocker>
+	{
+		new("Shocker 1", "1"),
+		new("Shocker 2", "2"),
+		new("Shocker 3", "3"),
+		new("Shocker 4", "4")
+	};
+
 	public List<Cheer> TestData = new List<Cheer>
 	{
-		new("", [1,2], 100, OperationMethod.Vibrate, 69,10),
-		new("shock", [1], 500, OperationMethod.Shock, 25, 1)
+		new("", [TestShockers[1],TestShockers[0]], 100, OperationMethod.Vibrate, 69,10, true),
+		new("shock", [TestShockers[2], TestShockers[3]], 500, OperationMethod.Shock, 25, 1, false)
 	};
+	public class CheerData
+	{
+		public string keyword;
+		public string[] shockers;
+		public int minimum;
+		public OperationMethod method;
+		public int intensity;
+		public int duration;
+
+		public CheerData()
+		{
+		}
+	}
+	public void processListChange(List<string> data)
+	{
+		Console.WriteLine(string.Join(", ", data));
+
+	}
 }
