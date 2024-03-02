@@ -37,7 +37,7 @@ public static class MauiProgram
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
-                .ConfigureFonts(fonts => fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular"));
+                .ConfigureFonts(fonts => fonts.AddFont("Roboto-Regular.ttf", "RobotoRegular"));
 
             builder.Services.AddLogging(x => x.AddSerilog(dispose: true));
 

@@ -1,5 +1,10 @@
-﻿html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+﻿@font-face {
+    font-family: 'RobotoRegular';
+    src: url('fonts/Roboto-Regular.ttf') format('truetype');
+}
+
+html, body {
+    font-family: 'RobotoRegular', Helvetica, Arial, sans-serif;
 }
 
 body {
@@ -74,10 +79,11 @@ h1:focus {
 }
 
 #app > section > section > main > div.row.justify-content-between > div:nth-child(2) {
-    display: none!important
+    display: none !important
 }
+
 #app > section > section > main > div.row.justify-content-between > div.col-auto.d-flex.flex-row-reverse {
-    display: none!important
+    display: none !important
 }
 
 @supports (-webkit-touch-callout: none) {
