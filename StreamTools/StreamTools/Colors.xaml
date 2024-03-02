@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xaml-comp compile="true?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+	<!-- Color Palette -->
+	<Color x:Key="PrimaryColor">#79C6DB</Color>
+	<Color x:Key="PrimaryVariantColor">#4BA3C7</Color>
+	<Color x:Key="SecondaryColor">#EEEEEE</Color>
+	<Color x:Key="SecondaryVariantColor">#BDBDBD</Color>
+	<Color x:Key="SuccessColor">#4CAF50</Color>
+	<Color x:Key="WarningColor">#FFC107</Color>
+	<Color x:Key="InfoColor">#29B6F6</Color>
+	<Color x:Key="LinkColor">#81D4FA</Color>
+	<Color x:Key="DangerColor">#E53935</Color>
+	<Color x:Key="MutedColor">#A0A0A0</Color>
+	<Color x:Key="BackgroundColor">#1E1E1E</Color>
+
+	<!--Application Resources-->
+	<SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+	<SolidColorBrush x:Key="PrimaryVariantBrush" Color="{StaticResource PrimaryVariantColor}"/>
+	<SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}"/>
+	<SolidColorBrush x:Key="SecondaryVariantBrush" Color="{StaticResource SecondaryVariantColor}"/>
+	<SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}"/>
+	<SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
+	<SolidColorBrush x:Key="InfoBrush" Color="{StaticResource InfoColor}"/>
+	<SolidColorBrush x:Key="LinkBrush" Color="{StaticResource LinkColor}"/>
+	<SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}"/>
+	<SolidColorBrush x:Key="MutedBrush" Color="{StaticResource MutedColor}"/>
+	<SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}"/>
+</ResourceDictionary>

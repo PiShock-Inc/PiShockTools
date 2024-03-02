@@ -14,18 +14,27 @@
 @code
 {
     private readonly Theme _theme = new()
-    {
-       ColorOptions = new()
-       {
-                Primary = "#79c6db",
-                Dark = "#1e1e1e",
-                Light = "#eeeeee",
-
-       },
-       TextColorOptions = new()
-       {
-                Primary = "#FFFFFF",
-                Body = "#FFFFFF"
-       }
-    };
+        {
+            ColorOptions = new()
+            {
+                Primary = "#79C6DB",
+                Secondary = "#EEEEEE",
+                Success = "#4CAF50",
+                Warning = "#FFC107",
+                Info = "#29B6F6",
+                Link = "#81D4FA",
+                Danger = "#E53935",
+                Dark = "#1E1E1E"
+            },
+            BodyOptions = new()
+            {
+                BackgroundColor="#1E1E1E"
+            },
+            TextColorOptions = new()
+            {
+                Muted = "#A0A0A0",
+                Light = "#FFFFFF",
+                Dark = "#000000"
+            }
+        };
 }

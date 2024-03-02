@@ -37,7 +37,7 @@
 	<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
 		 <Paragraph> Connected to: %TWITCHNAME%</Paragraph>
 	 </Container>
-	<Container Fluix VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+	<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
 		<Button Color="Color.Primary">Connect Twitch</Button>
 	</Container>
 }
@@ -47,12 +47,14 @@
 		 <Paragraph>Cheers</Paragraph>
 	 </Container>
 	 <Button Color="Color.Success" Clicked="NewRow">New</Button>
-	<DataGrid @ref="cheerGrid" TItem="Cheer"
-			  CommandMode="DataGridCommandMode.Commands"
+     <DataGrid @ref="cheerGrid" 
+               TItem="Cheer"
+			CommandMode="DataGridCommandMode.Commands"
 			Editable
-			   EditMode="DataGridEditMode.Cell"
+			EditMode="DataGridEditMode.Cell"
 	        Data="@TestData"
-	        Responsive
+            Responsive
+			HeaderThemeContrast="ThemeContrast.Dark"
 			ShowPager>
 		<ButtonRowTemplate>
 			<Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
