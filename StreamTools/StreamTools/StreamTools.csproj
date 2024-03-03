@@ -58,7 +58,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Components\Layout\NewFile1.txt" />
+	  <None Remove="Components\NewFile1.txt" />
+	  <None Remove="Components\Pages\NewFile1.txt" />
+	  <None Remove="Data\Configurations\NewFile1.txt" />
+	  <None Remove="Data\NewFile1.txt" />
 	  <None Remove="Resources\Fonts\Roboto-Regular.ttf" />
+	  <None Remove="Services\NewFile1.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -74,6 +80,8 @@
 		<PackageReference Include="Blazorise.Snackbar" Version="1.4.2" />
 		<PackageReference Include="Blazorise.SpinKit" Version="1.4.2" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.2" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />

@@ -4,8 +4,9 @@ using Blazorise.Icons.Material;
 using Blazorise.Material;
 using Serilog;
 using Serilog.Formatting.Compact;
-using Blazorise.Icons.FontAwesome;
 using Serilog.Sinks.SystemConsole.Themes;
+using StreamTools.Data;
+using Blazorise.LoadingIndicator;
 
 namespace StreamTools;
 public static class MauiProgram
@@ -38,16 +39,16 @@ public static class MauiProgram
                 .ConfigureFonts(fonts => fonts.AddFont("Roboto-Regular.ttf", "RobotoRegular"));
 
             builder.Services.AddLogging(x => x.AddSerilog(dispose: true));
-
+            builder.Services.AddDbContextFactory<StreamToolsContext>();
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddBlazorise(options => options.Immediate = true)
                 .AddMaterialProviders()
-                .AddMaterialIcons();
+                .AddMaterialIcons()
+                .AddLoadingIndicator();
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
 #endif
-
             return builder.Build();
         }
         catch (Exception ex)

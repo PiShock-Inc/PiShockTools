@@ -1,230 +1,255 @@
 ﻿@page "/twitch"
 @using StreamTools.Components.Models
 @using StreamTools.Components.Models.Enums
+@namespace StreamTools.Components.Pages
+
 
 <Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-	 <Pagination VerticalAlignment="VerticalAlignment.Top">
-		 <PaginationItem Disabled="@isActive.First()" @onclick="Previous">
-			 <PaginationLink>
-				 <span aria-hidden="true">«</span>
-			 </PaginationLink>
-		 </PaginationItem>
-		 <PaginationItem Active="@isActive[0]">
-			 <PaginationLink Page="1" Clicked="SetActive">
-				 Account
-			 </PaginationLink>
-		 </PaginationItem>
-		 <PaginationItem Active="@isActive[1]">
-			 <PaginationLink Page="2" Clicked="SetActive">
-				 Cheers
-			 </PaginationLink>
-		 </PaginationItem>
-		 <PaginationItem Active="@isActive[2]">
-			 <PaginationLink Page="3" Clicked="SetActive">
-				 Redeems
-			 </PaginationLink>
-		 </PaginationItem>
-		 <PaginationItem Disabled="@isActive.Last()" @onclick="Next">
-			 <PaginationLink>
-				 <span aria-hidden="true">»</span>
-			 </PaginationLink>
-		 </PaginationItem>
-	 </Pagination>
- </Container>
- <br />
- @if (!IsNotActive(0))
+    <Pagination VerticalAlignment="VerticalAlignment.Top">
+        <PaginationItem Disabled="@isActive.First()" @onclick="Previous">
+            <PaginationLink>
+                <span aria-hidden="true">«</span>
+            </PaginationLink>
+        </PaginationItem>
+        <PaginationItem Active="@isActive[0]">
+            <PaginationLink Page="1" Clicked="SetActive">
+                Account
+            </PaginationLink>
+        </PaginationItem>
+        <PaginationItem Active="@isActive[1]">
+            <PaginationLink Page="2" Clicked="SetActive">
+                Cheers
+            </PaginationLink>
+        </PaginationItem>
+        <PaginationItem Active="@isActive[2]">
+            <PaginationLink Page="3" Clicked="SetActive">
+                Redeems
+            </PaginationLink>
+        </PaginationItem>
+        <PaginationItem Disabled="@isActive.Last()" @onclick="Next">
+            <PaginationLink>
+                <span aria-hidden="true">»</span>
+            </PaginationLink>
+        </PaginationItem>
+    </Pagination>
+</Container>
+<br />
+@if (!IsNotActive(0))
 {
-	<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-		 <Paragraph> Connected to: %TWITCHNAME%</Paragraph>
-	 </Container>
-	<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-		<Button Color="Color.Primary">Connect Twitch</Button>
-	</Container>
+    <Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+        <Paragraph TextColor="TextColor.Light"> Connected to: %TWITCHNAME%</Paragraph>
+    </Container>
+    <Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+        <Button Color="Color.Primary">Connect Twitch</Button>
+    </Container>
 }
 @if (!IsNotActive(1))
 {
-	<Container Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-		 <Paragraph>Cheers</Paragraph>
-	 </Container>
-	 <Button Color="Color.Success" Clicked="NewRow">New</Button>
-     <DataGrid @ref="cheerGrid" 
-               TItem="Cheer"
-			CommandMode="DataGridCommandMode.Commands"
-			Editable
-			EditMode="DataGridEditMode.Cell"
-	        Data="@TestData"
-            Responsive
-			HeaderThemeContrast="ThemeContrast.Dark"
-			ShowPager>
-		<ButtonRowTemplate>
-			<Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
-		</ButtonRowTemplate>
-		 <DataGridColumns>
+    <Container Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+        <Paragraph TextColor="TextColor.Light">Cheers</Paragraph>
+    </Container>
+    <Button Color="Color.Success" Clicked="CheerNewRow">New</Button>
+    <DataGrid @ref="cheerGrid"
+              TItem="Cheer"
+              CommandMode="DataGridCommandMode.Commands"
+              Editable
+              EditMode="DataGridEditMode.Cell"
+              Data="@TestData"
+              Responsive
+              HeaderThemeContrast="ThemeContrast.Dark"
+              ShowPager
+              Sortable=false
+              Class="bg-transparent text-light"
+              Borderless>
+        <ButtonRowTemplate>
+            <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
+        </ButtonRowTemplate>
+        <DataGridColumns>
 
-				<DataGridColumn Field="@nameof(Cheer.Keyword)" Caption="Keyword" Editable />
-			 <DataGridColumn Field="@nameof(Cheer.Shockers)" Caption="Shockers" Editable>
-				 <EditTemplate>
-					 <DropdownList TItem="Shocker"
-							Data="@TestShockers"
-							TextField="(item) => item.Name"
-							ValueField="(item) => item"
-							SelectionMode="DropdownListSelectionMode.Checkbox"
-							SelectedValues="@((List<Shocker>)context.CellValue)"
-							SelectedValuesChanged="@( v => context.CellValue = v)"
-					TValue="Shocker"> @{
-						var text = "";
-							var value = context.CellValue as List<Shocker>;
-							if (value != null) { 
-								text = String.Join(", ", ((List<Shocker>)context.CellValue).OrderBy(s => s.Name).Select(s => s.Name));
-							}
-							else
-							{
-								text = "Select shocker";
-
-							}
-							@text
-						}</DropdownList>
-				 </EditTemplate>
-				 <DisplayTemplate>
-					@{
-						var value = context.Shockers;
-						@string.Join(", ", value.OrderBy(s => s.Name).Select(s => s.Name));
-					}
-				 </DisplayTemplate>
-			 </DataGridColumn>
-			 <DataGridSelectColumn Field="@nameof(Cheer.Method)" Caption="Method" Data="@MethodItems" ValueField="(x) => ((OperationMethod)x)" TextField="(x) => ((OperationMethod) x).GetName()" Editable />
-			 <DataGridCheckColumn Field="@nameof(Cheer.Warning)" Caption="Warning vibration" Editable />
-			 <DataGridNumericColumn Field="@nameof(Cheer.MinimumCheer)" Caption="Minimum Cheer" Editable />
-			 <DataGridNumericColumn Field="@nameof(Cheer.Intensity)" Caption="Intensity" Editable />
-			 <DataGridNumericColumn Field="@nameof(Cheer.Duration)" Caption="Duration" Editable />
-				<DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="true" CancelCommandAllowed>
-				<SaveCommandTemplate>
-					<Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
-					</SaveCommandTemplate>
-					<CancelCommandTemplate>
-						<Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
-					</CancelCommandTemplate>
-					<DeleteCommandTemplate>
-						<Button ElementId="btnDelete" Color="Color.Danger" Clicked="@context.Clicked">@context.LocalizationString</Button>
-					</DeleteCommandTemplate>
-				</DataGridCommandColumn>
-		 </DataGridColumns>
-	 </DataGrid>
+            <DataGridColumn Field="@nameof(Cheer.Keyword)" Caption="Keyword" Editable />
+            <DataGridColumn Field="@nameof(Cheer.Shockers)" Caption="Shockers" Editable>
+                <EditTemplate>
+                    <DropdownList TItem="Shocker"
+                                  Data="@TestShockers"
+                                  TextField="(item) => item.Name"
+                                  ValueField="(item) => item"
+                                  SelectionMode="DropdownListSelectionMode.Checkbox"
+                                  SelectedValues="@((List<Shocker>)context.CellValue)"
+                                  SelectedValuesChanged="@( v => context.CellValue = v)"
+                                  TValue="Shocker">
+                        @{
+                            var text = "";
+                            var value = context.CellValue as List<Shocker> ?? [];
+                            if (!value.Any())
+                            {
+                                text = "Select shocker";
+                            }
+                            else
+                            {
+                                text = string.Join(", ", value.OrderBy(x => x.Name).Select(s => s.Name));
+                            }
+                        }
+                    </DropdownList>
+                </EditTemplate>
+                <DisplayTemplate>
+                    @{
+                        var value = context.Shockers;
+                        @string.Join(", ", value.OrderBy(s => s.Name).Select(s => s.Name))
+                        ;
+                    }
+                </DisplayTemplate>
+            </DataGridColumn>
+            <DataGridSelectColumn Field="@nameof(Cheer.Method)" Caption="Method" Data="@MethodItems" ValueField="(x) => ((OperationMethod)x)" TextField="(x) => ((OperationMethod) x).GetName()" Editable />
+            <DataGridCheckColumn Field="@nameof(Cheer.Warning)" Caption="Warning vibration" Editable>
+                <DisplayTemplate>
+                    <Check @bind-Checked="@context.Warning" Background="Background.Secondary" />
+                </DisplayTemplate>
+            </DataGridCheckColumn>
+            <DataGridNumericColumn Field="@nameof(Cheer.MinimumCheer)" Caption="Minimum Cheer" Editable />
+            <DataGridNumericColumn Field="@nameof(Cheer.Intensity)" Caption="Intensity" Editable />
+            <DataGridNumericColumn Field="@nameof(Cheer.Duration)" Caption="Duration" Editable />
+            <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="true" CancelCommandAllowed>
+                <SaveCommandTemplate>
+                    <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                </SaveCommandTemplate>
+                <CancelCommandTemplate>
+                    <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                </CancelCommandTemplate>
+                <DeleteCommandTemplate>
+                    <Button ElementId="btnDelete" Color="Color.Danger" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                </DeleteCommandTemplate>
+            </DataGridCommandColumn>
+        </DataGridColumns>
+        <EmptyTemplate>
+            <Card>
+                <CardBody Background="Background.Transparent" Shadow="Shadow.Default">
+                    <CardText>
+                        No Cheers to display...
+                    </CardText>
+                </CardBody>
+            </Card>
+        </EmptyTemplate>
+        <LoadingTemplate>
+            <SpinKit Type="SpinKitType.Plane" />
+        </LoadingTemplate>
+    </DataGrid>
 }
 @if (!IsNotActive(2))
 {
-	<Container Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-		 <Paragraph>Redeems</Paragraph>
-	 </Container>
-}
+    <Container Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+        <Paragraph>Redeems</Paragraph>
+    </Container>
+    <Button Color="Color.Success" Clicked="RedeemNewRow">New</Button>
+    <DataGrid @ref="redeemGrid"
+              TItem="Redeem"
+              CommandMode="DataGridCommandMode.Commands"
+              Editable
+              EditMode="DataGridEditMode.Cell"
+              Data="@TestDataRedeem"
+              Responsive
+              HeaderThemeContrast="ThemeContrast.Dark"
+              ShowPager
+              Sortable=false
+              Class="bg-transparent text-light"
+              Borderless>
+        <ButtonRowTemplate>
+            <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
+        </ButtonRowTemplate>
+        <DataGridColumns>
+            <DataGridColumn Field="@nameof(Redeem.Name)" Caption="Redeem name" Editable />
+            <DataGridColumn Field="@nameof(Redeem.Description)" Caption="Description" Editable />
+            <DataGridColumn Field="@nameof(Redeem.Shockers)" Caption="Shockers" Editable>
+                <EditTemplate>
+                    <DropdownList TItem="Shocker"
+                                  Data="@TestShockers"
+                                  TextField="(item) => item.Name"
+                                  ValueField="(item) => item"
+                                  SelectionMode="DropdownListSelectionMode.Checkbox"
+                                  SelectedValues="@((List<Shocker>)context.CellValue)"
+                                  SelectedValuesChanged="@( v => context.CellValue = v)"
+                                  TValue="Shocker">
+                        @{
+                            var text = "";
+                            var value = context.CellValue as List<Shocker> ?? [];
 
-@code {
-	private bool[] isActive = { false, true, false };
+                            if (!value.Any())
+                            {
+                            }
+                            if (value != null)
+                            {
+                                text = String.Join(", ", ((List<Shocker>)context.CellValue).OrderBy(s => s.Name).Select(s => s.Name));
+                            }
+                            else
+                            {
+                                text = "Select shocker";
 
-	private void Previous()
-	{
-		if (isActive[0]) return;
-
-		if (isActive[1])
-		{
-			SetActive("1");
-			return;
-		}
-		if (isActive[2])
-		{
-			SetActive("2");
-			return;
-		}
-	}
-
-	private void Next()
-	{
-		if (isActive[0])
-		{
-			SetActive("2");
-			return;
-		}
-
-		if (isActive[1])
-		{
-			SetActive("3");
-			return;
-		}
-
-		if (isActive[2])
-		{
-			return;
-		}
-	}
-
-	private void SetActive(string idx)
-	{
-		switch (idx)
-		{
-			case "1":
-				isActive[0] = true;
-				isActive[1] = false;
-				isActive[2] = false;
-				break;
-			case "2":
-				isActive[0] = false;
-				isActive[1] = true;
-				isActive[2] = false;
-				break;
-			case "3":
-				isActive[0] = false;
-				isActive[1] = false;
-				isActive[2] = true;
-				break;
-			default:
-				break;
-		}
-	}
-	private bool IsNotActive(int id)
-	{
-		return !isActive[id];
-	}
-
-	private List<object> MethodItems = Enum.GetValues<OperationMethod>().Select(x => (object)x).ToList();
-
-	public DataGrid<Cheer> cheerGrid;
-
-	public async Task NewRow()
-	{
-		await cheerGrid.New();
-	}
-
-
-	//TEMP
-	public static List<Shocker> TestShockers = new List<Shocker>
-	{
-		new("Shocker 1", "1"),
-		new("Shocker 2", "2"),
-		new("Shocker 3", "3"),
-		new("Shocker 4", "4")
-	};
-
-	public List<Cheer> TestData = new List<Cheer>
-	{
-		new("", [TestShockers[1],TestShockers[0]], 100, OperationMethod.Vibrate, 69,10, true),
-		new("shock", [TestShockers[2], TestShockers[3]], 500, OperationMethod.Shock, 25, 1, false)
-	};
-	public class CheerData
-	{
-		public string keyword;
-		public string[] shockers;
-		public int minimum;
-		public OperationMethod method;
-		public int intensity;
-		public int duration;
-
-		public CheerData()
-		{
-		}
-	}
-	public void processListChange(List<string> data)
-	{
-		Console.WriteLine(string.Join(", ", data));
-
-	}
+                            }
+                            @text
+                        }
+                    </DropdownList>
+                </EditTemplate>
+                <DisplayTemplate>
+                    @{
+                        var value = context.Shockers;
+                        @string.Join(", ", value.OrderBy(s => s.Name).Select(s => s.Name))
+                        ;
+                    }
+                </DisplayTemplate>
+            </DataGridColumn>
+            <DataGridSelectColumn Field="@nameof(Redeem.Method)" Caption="Method" Data="@MethodItems" ValueField="(x) => ((OperationMethod)x)" TextField="(x) => ((OperationMethod) x).GetName()" Editable />
+            <DataGridCheckColumn Field="@nameof(Redeem.Warning)" Caption="Warning vibration" Editable />
+            <DataGridNumericColumn Field="@nameof(Redeem.Intensity)" Caption="Intensity" Editable />
+            <DataGridNumericColumn Field="@nameof(Redeem.Duration)" Caption="Duration" Editable />
+            <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="true" CancelCommandAllowed>
+                <SaveCommandTemplate>
+                    <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                </SaveCommandTemplate>
+                <CancelCommandTemplate>
+                    <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                </CancelCommandTemplate>
+                <DeleteCommandTemplate>
+                    <Button ElementId="btnDelete" Color="Color.Danger" Clicked="@context.Clicked">@context.LocalizationString</Button>
+                </DeleteCommandTemplate>
+            </DataGridCommandColumn>
+        </DataGridColumns>
+        <PageButtonTemplate>
+            <Span TextColor="TextColor.Success">
+                @context.PageNumber
+            </Span>
+        </PageButtonTemplate>
+        <NextPageButtonTemplate><Icon Name="IconName.StepForward" TextColor="TextColor.Success" /></NextPageButtonTemplate>
+        <PreviousPageButtonTemplate><Icon Name="IconName.StepBackward" TextColor="TextColor.Success" /></PreviousPageButtonTemplate>
+        <LastPageButtonTemplate><Icon Name="IconName.Forward" TextColor="TextColor.Success" /></LastPageButtonTemplate>
+        <FirstPageButtonTemplate><Icon Name="IconName.Backward" TextColor="TextColor.Success" /></FirstPageButtonTemplate>
+        <TotalItemsTemplate></TotalItemsTemplate>
+        <TotalItemsShortTemplate></TotalItemsShortTemplate>
+        <ItemsPerPageTemplate></ItemsPerPageTemplate>
+        <PageSelectorTemplate>
+            <Div Flex="Flex.AlignSelf.Center">
+                <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPage" Size="Size.Small">
+                    @for (int i = context.FirstVisiblePage; i <= context.LastVisiblePage; ++i)
+                    {
+                        var pageNumber = i;
+                        <SelectItem Value="@pageNumber">@pageNumber</SelectItem>
+                    }
+                </Select>
+            </Div>
+        </PageSelectorTemplate>
+        <PageSizesTemplate>
+            <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPageSize" Size="Size.Small">
+            </Select>
+        </PageSizesTemplate>
+        <EmptyTemplate>
+            <Card>
+                <CardBody>
+                    <CardText>
+                        No Redeems to display...
+                    </CardText>
+                </CardBody>
+            </Card>
+        </EmptyTemplate>
+        <LoadingTemplate>
+            <SpinKit Type="SpinKitType.Plane" />
+        </LoadingTemplate>
+    </DataGrid>
 }

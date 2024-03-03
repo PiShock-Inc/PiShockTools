@@ -1,7 +1,123 @@
 ﻿@page "/youtube"
+@using StreamTools.Components.Models
+@using StreamTools.Components.Models.Enums
 
-<h3>Youtube</h3>
-
-@code {
-
+<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+	<Pagination VerticalAlignment="VerticalAlignment.Top">
+		<PaginationItem Disabled="@isActive.First()" @onclick="Previous">
+			<PaginationLink>
+				<span aria-hidden="true">«</span>
+			</PaginationLink>
+		</PaginationItem>
+		<PaginationItem Active="@isActive[0]">
+			<PaginationLink Page="1" Clicked="SetActive">
+				Account
+			</PaginationLink>
+		</PaginationItem>
+		<PaginationItem Active="@isActive[1]">
+			<PaginationLink Page="2" Clicked="SetActive">
+				SuperChats
+			</PaginationLink>
+		</PaginationItem>
+		<PaginationItem Disabled="@isActive.Last()" @onclick="Next">
+			<PaginationLink>
+				<span aria-hidden="true">»</span>
+			</PaginationLink>
+		</PaginationItem>
+	</Pagination>
+</Container>
+<br />
+@if(!IsNotActive(0))
+{
+	<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+		<Paragraph> Connected to: %YOUTUBENAME%</Paragraph>
+	</Container>
+	<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+		<Button Color="Color.Primary">Connect Youtube</Button>
+	</Container>
+}
+@if(!IsNotActive(1)){
+<Container Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+    <Paragraph TextColor="TextColor.Light">Cheers</Paragraph>
+</Container>
+<Button Color="Color.Success" Clicked="SuperchatCreateRow">New</Button>
+<DataGrid @ref="superchatGrid"
+          TItem="SuperChat"
+          CommandMode="DataGridCommandMode.Commands"
+          Editable
+          EditMode="DataGridEditMode.Cell"
+          Data="@TestData"
+          Responsive
+          HeaderThemeContrast="ThemeContrast.Dark"
+          ShowPager
+          Sortable=false
+          Class="bg-transparent text-light"
+          Borderless>
+    <ButtonRowTemplate>
+        <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
+    </ButtonRowTemplate>
+    <DataGridColumns>
+        <DataGridColumn Field="@nameof(SuperChat.Keyword)" Caption="Keyword" Editable />
+        <DataGridColumn Field="@nameof(SuperChat.Shockers)" Caption="Shockers" Editable>
+            <EditTemplate>
+                <DropdownList TItem="Shocker"
+                              Data="@TestShockers"
+                              TextField="(item) => item.Name"
+                              ValueField="(item) => item"
+                              SelectionMode="DropdownListSelectionMode.Checkbox"
+                              SelectedValues="@((List<Shocker>)context.CellValue)"
+                              SelectedValuesChanged="@( v => context.CellValue = v)"
+                              TValue="Shocker">
+                    @{
+                        var text = "";
+                        var value = context.CellValue as List<Shocker> ?? [];
+                        if (!value.Any())
+                        {
+                            text = "Select shocker";
+                        }
+                        else
+                        {
+                            text = string.Join(", ", value.OrderBy(x => x.Name).Select(s => s.Name));
+                        }
+                    }
+                </DropdownList>
+            </EditTemplate>
+            <DisplayTemplate>
+                @{
+                    var value = context.Shockers;
+                    @string.Join(", ", value.OrderBy(s => s.Name).Select(s => s.Name))
+                    ;
+                }
+            </DisplayTemplate>
+        </DataGridColumn>
+        <DataGridSelectColumn Field="@nameof(SuperChat.Method)" Caption="Method" Data="@MethodItems" ValueField="(x) => ((OperationMethod)x)" TextField="(x) => ((OperationMethod) x).GetName()" Editable />
+        <DataGridCheckColumn Field="@nameof(SuperChat.Warning)" Caption="Warning vibration" Editable />
+        <DataGridNumericColumn Field="@nameof(SuperChat.MinimumAmount)" Caption="Minimum Cheer" Editable />
+        <DataGridNumericColumn Field="@nameof(SuperChat.Intensity)" Caption="Intensity" Editable />
+        <DataGridNumericColumn Field="@nameof(SuperChat.Duration)" Caption="Duration" Editable />
+        <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="true" CancelCommandAllowed>
+            <SaveCommandTemplate>
+                <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </SaveCommandTemplate>
+            <CancelCommandTemplate>
+                <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </CancelCommandTemplate>
+            <DeleteCommandTemplate>
+                <Button ElementId="btnDelete" Color="Color.Danger" Clicked="@context.Clicked">@context.LocalizationString</Button>
+            </DeleteCommandTemplate>
+        </DataGridCommandColumn>
+    </DataGridColumns>
+          <EmptyTemplate>
+              <Card>
+                  <CardBody>
+                      <CardText>
+                          No SuperChats to display...
+                      </CardText>
+                  </CardBody>
+              </Card>
+          </EmptyTemplate>
+          <LoadingTemplate>
+              <SpinKit Type="SpinKitType.Plane" />
+          </LoadingTemplate>
+</DataGrid>
 }

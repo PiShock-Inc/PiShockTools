@@ -6,29 +6,34 @@
             <NavMenu />
         </LayoutSiderContent>
     </LayoutSider>
-        <Layout>
-            <LayoutHeader Fixed>
-                <Bar Background="Background.Dark"
-                     ThemeContrast="ThemeContrast.Dark"
-                     Mode="BarMode.Horizontal"
-                     Breakpoint="Breakpoint.Desktop"
-                     NavigationBreakpoint="Breakpoint.Tablet">
-                    <BarBrand>
-                        Pi-Shock
-                    </BarBrand>
-                    <BarMenu>
+    <Layout>
+        <LayoutHeader Fixed>
+            <Bar Background="Background.Dark"
+                 ThemeContrast="ThemeContrast.Dark"
+                 Mode="BarMode.Horizontal"
+                 Breakpoint="Breakpoint.Desktop"
+                 NavigationBreakpoint="Breakpoint.Tablet">
+                <BarBrand>
+                    Pi-Shock
+                </BarBrand>
+                <BarMenu>
                     <BarStart>
                         <BarItem>
                             <BarLink To="" Match="Match.All">
-                                Home <BarIcon IconName="IconName.Dashboard"/>
+                                Home <BarIcon IconName="IconName.Dashboard" />
                             </BarLink>
-                        </BarItem>
+                        </BarItem>                      
                     </BarStart>
-                    </BarMenu>
-                </Bar>
-            </LayoutHeader>
-            <LayoutContent Padding="Padding.Is4.OnX">
-                @Body
-            </LayoutContent>
-        </Layout>
+                    <BarEnd>
+                        <BarItem>
+                            <Button Color="Color.Success" Clicked="OpenLoginModalAsync">Login<BarIcon IconName="IconName.LockOpen" /></Button>
+                        </BarItem>
+                    </BarEnd>
+                </BarMenu>
+            </Bar>
+        </LayoutHeader>
+        <LayoutContent Padding="Padding.Is4.OnX">
+            @Body
+        </LayoutContent>
+    </Layout>
 </Layout>
