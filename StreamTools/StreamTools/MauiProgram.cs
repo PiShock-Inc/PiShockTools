@@ -1,12 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using Blazorise;
-using Blazorise.Icons.Material;
-using Blazorise.Material;
+using MudBlazor.Services;
 using Serilog;
 using Serilog.Formatting.Compact;
 using Serilog.Sinks.SystemConsole.Themes;
 using StreamTools.Data;
-using Blazorise.LoadingIndicator;
 
 namespace StreamTools;
 public static class MauiProgram
@@ -41,10 +38,17 @@ public static class MauiProgram
             builder.Services.AddLogging(x => x.AddSerilog(dispose: true));
             builder.Services.AddDbContextFactory<StreamToolsContext>();
             builder.Services.AddMauiBlazorWebView();
-            builder.Services.AddBlazorise(options => options.Immediate = true)
-                .AddMaterialProviders()
-                .AddMaterialIcons()
-                .AddLoadingIndicator();
+            builder.Services.AddMudServices();
+            builder.Services.AddAuthentication()
+                .AddTwitch(options =>
+                {
+                    options.ClientId = "pi2igbk4suy7h9sbyv7wj6m3cs0ght"; //TODO Do not put this here in release (dumb dumb)
+                    options.Scope.Add("channel:read:redemptions");
+                    options.Scope.Add("channel:manage:redemptions");
+                    options.Scope.Add("bits:read");
+                    options.Scope.Add("channel:read:subscriptions");
+                    options.Scope.Add("channel:read:hype_train");
+                });
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();

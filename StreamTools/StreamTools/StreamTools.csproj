@@ -64,22 +64,12 @@
 	  <None Remove="Data\Configurations\NewFile1.txt" />
 	  <None Remove="Data\NewFile1.txt" />
 	  <None Remove="Resources\Fonts\Roboto-Regular.ttf" />
-	  <None Remove="Services\NewFile1.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Blazorise" Version="1.4.2" />
-		<PackageReference Include="Blazorise.Animate" Version="1.4.2" />
-		<PackageReference Include="Blazorise.Components" Version="1.4.2" />
-		<PackageReference Include="Blazorise.DataGrid" Version="1.4.2" />
-		<PackageReference Include="Blazorise.FluentValidation" Version="1.4.2" />
-		<PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.4.2" />
-		<PackageReference Include="Blazorise.Icons.Material" Version="1.4.2" />
-		<PackageReference Include="Blazorise.LoadingIndicator" Version="1.4.2" />
-		<PackageReference Include="Blazorise.Material" Version="1.4.2" />
-		<PackageReference Include="Blazorise.Snackbar" Version="1.4.2" />
-		<PackageReference Include="Blazorise.SpinKit" Version="1.4.2" />
+		<PackageReference Include="AspNet.Security.OAuth.Twitch" Version="8.0.0" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.2" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
@@ -89,6 +79,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.7" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.7" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="MudBlazor" Version="6.17.0" />
 		<PackageReference Include="Serilog" Version="3.1.1" />
 		<PackageReference Include="Serilog.Enrichers.Environment" Version="2.3.0" />
 		<PackageReference Include="Serilog.Enrichers.Memory" Version="1.0.4" />
@@ -105,9 +96,11 @@
 		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 		<PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+		<PackageReference Include="TwitchLib" Version="3.5.3" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Services\" />
 	  <Folder Include="wwwroot\js\" />
 	</ItemGroup>
 

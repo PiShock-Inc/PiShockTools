@@ -1,40 +1,14 @@
-﻿<Blazorise.ThemeProvider Theme="_theme">
-    <Router AppAssembly="@typeof(MauiProgram).Assembly">
-        <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        </Found>
-    </Router>
-    <MessageProvider />
-    <NotificationProvider />
-    <ModalProvider />
-    <ApplicationLoadingIndicator />
-    <PageProgressProvider />
-</Blazorise.ThemeProvider>
+﻿
+<Router AppAssembly="@typeof(MauiProgram).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+</Router>
+<MudThemeProvider IsDarkMode="true" />
+<MudDialogProvider />
+<MudSnackbarProvider />
 @code
 {
-    private readonly Theme _theme = new()
-        {
-            ColorOptions = new()
-            {
-                Primary = "#79C6DB",
-                Secondary = "#EEEEEE",
-                Success = "#4CAF50",
-                Warning = "#FFC107",
-                Info = "#29B6F6",
-                Link = "#81D4FA",
-                Danger = "#E53935",
-                Dark = "#1E1E1E"
-            },
-            BodyOptions = new()
-            {
-                BackgroundColor="#1E1E1E"
-            },
-            TextColorOptions = new()
-            {
-                Muted = "#A0A0A0",
-                Light = "#FFFFFF",
-                Dark = "#000000"
-            }
-        };
+
 }

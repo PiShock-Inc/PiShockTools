@@ -1,5 +1,6 @@
-﻿using Blazorise.DataGrid;
+﻿
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using StreamTools.Components.Models;
 using StreamTools.Components.Models.Enums;
 
@@ -75,17 +76,25 @@ public partial class Twitch : ComponentBase
 
     private List<object> MethodItems = Enum.GetValues<OperationMethod>().Select(x => (object)x).ToList();
 
-    private DataGrid<Cheer> cheerGrid;
-
-    private DataGrid<Redeem> redeemGrid;
-
-    public async Task CheerNewRow()
+    private void OnShockerSelectItemsChanged(Cheer item, IEnumerable<Shocker> newValues)
     {
-        await cheerGrid.New();
+        item.Shockers = newValues.ToList();
     }
-    public async Task RedeemNewRow()
+    private void OnShockerSelectItemsChanged(Redeem item, IEnumerable<Shocker> newValues)
     {
-        await redeemGrid.New();
+        item.Shockers = newValues.ToList();
+    }
+
+    private MudDataGrid<Cheer> mudDataGridCheer;
+    private MudDataGrid<Redeem> mudDataGridRedeem;
+
+    private async Task CreateNewCheerRow()
+    {
+        await mudDataGridCheer.SetEditingItemAsync(new());
+    }
+    private async Task CreateNewRedeemRow()
+    {
+        await mudDataGridRedeem.SetEditingItemAsync(new());
     }
 
 
@@ -100,8 +109,8 @@ public partial class Twitch : ComponentBase
 
     public List<Cheer> TestData = new()
     {
-        //new("", [TestShockers[1],TestShockers[0]], 100, OperationMethod.Vibrate, 69,10, true),
-        //new("shock", [TestShockers[2], TestShockers[3]], 500, OperationMethod.Shock, 25, 1, false)
+        new("", [TestShockers[1],TestShockers[0]], 100, OperationMethod.Vibrate, 69,10, true),
+        new("shock", [TestShockers[2], TestShockers[3]], 500, OperationMethod.Shock, 25, 1, false)
     };
 
     public List<Redeem> TestDataRedeem = new List<Redeem>
@@ -110,22 +119,6 @@ public partial class Twitch : ComponentBase
         new("vibrate", "Redeem this to vibrate the collar", [TestShockers[3]], OperationMethod.Vibrate, 100, 10, true),
         new("beep", "Rdeem this to make the collar beep", [TestShockers[0], TestShockers[1], TestShockers[2], TestShockers[3]], OperationMethod.Beep, 100, 1, false)
     };
-    public class CheerData
-    {
-        public string keyword;
-        public string[] shockers;
-        public int minimum;
-        public OperationMethod method;
-        public int intensity;
-        public int duration;
 
-        public CheerData()
-        {
-        }
-    }
-    public void processListChange(List<string> data)
-    {
-        Console.WriteLine(string.Join(", ", data));
 
-    }
 }
