@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using Serilog;
 using Serilog.Formatting.Compact;
@@ -39,7 +40,7 @@ public static class MauiProgram
             builder.Services.AddDbContextFactory<StreamToolsContext>();
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddMudServices();
-            builder.Services.AddAuthentication()
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddTwitch(options =>
                 {
                     options.ClientId = "pi2igbk4suy7h9sbyv7wj6m3cs0ght"; //TODO Do not put this here in release (dumb dumb)

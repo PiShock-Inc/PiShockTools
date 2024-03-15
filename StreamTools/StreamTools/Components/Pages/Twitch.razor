@@ -84,7 +84,9 @@
             </MudDataGrid>
         </MudTabPanel>
         <MudTabPanel Text="Redeems">
-            <MudButton Color="Color.Success" OnClick="CreateNewRedeemRow">New</MudButton>
+            <MudContainer>
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" FullWidth="true" Color="Color.Success" OnClick="CreateNewRedeemRow">New</MudButton>
+            </MudContainer>
             <MudDataGrid @ref="mudDataGridRedeem" T="Redeem" Items="@TestDataRedeem" ReadOnly="false" EditMode="DataGridEditMode.Cell" EditTrigger="DataGridEditTrigger.OnRowClick" SortMode="SortMode.None">
                 <Columns>
                     <PropertyColumn Property="x => x.Name" />
@@ -147,6 +149,9 @@
                     </PropertyColumn>
                 </Columns>
             </MudDataGrid>
+        </MudTabPanel>
+        <MudTabPanel Text="Subscription">
+
         </MudTabPanel>
     </MudTabs>
 </MudContainer>
