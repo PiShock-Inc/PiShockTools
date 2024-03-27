@@ -1,14 +1,23 @@
 ﻿
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using StreamTools.Components.Models;
 using StreamTools.Components.Models.Enums;
+using StreamTools.Data;
+using StreamTools.Services;
 
 namespace StreamTools.Components.Pages;
 
 public partial class Twitch : ComponentBase
 {
+
+    [Inject]
+    private StreamToolsContext dbContext { get; set; } 
+
     private bool[] isActive = [true, false, false];
+
+    private bool _processing = false;
 
     private void Previous()
     {
@@ -107,18 +116,32 @@ public partial class Twitch : ComponentBase
         new("Shocker 4", "4")
     };
 
-    public List<Cheer> TestData = new()
+    public List<Cheer> DataCheers = new()
     {
         new("", [TestShockers[1],TestShockers[0]], 100, OperationMethod.Vibrate, 69,10, true),
         new("shock", [TestShockers[2], TestShockers[3]], 500, OperationMethod.Shock, 25, 1, false)
     };
 
-    public List<Redeem> TestDataRedeem = new List<Redeem>
+    public List<Redeem> DataRedeems = new List<Redeem>
     {
         new("shockme", "Redeem this to shock me", [TestShockers[1], TestShockers[2]], OperationMethod.Shock, 50, 69, true),
         new("vibrate", "Redeem this to vibrate the collar", [TestShockers[3]], OperationMethod.Vibrate, 100, 10, true),
         new("beep", "Rdeem this to make the collar beep", [TestShockers[0], TestShockers[1], TestShockers[2], TestShockers[3]], OperationMethod.Beep, 100, 1, false)
     };
 
+    public bool isLoading = true;
 
+    private async Task twitchConnectButton()
+    {
+        _processing = true;
+        _processing = await TwitchService.LoginTwitch();
+        
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        DataRedeems = await dbContext.Redeems.ToListAsync();
+        DataCheers = await dbContext.Cheers.ToListAsync();
+        isLoading = false;
+    }
 }

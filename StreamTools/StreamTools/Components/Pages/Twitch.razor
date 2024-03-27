@@ -1,6 +1,7 @@
 ﻿@page "/twitch"
 @using StreamTools.Components.Models
 @using StreamTools.Components.Models.Enums
+@using StreamTools.Services
 @namespace StreamTools.Components.Pages
 
 
@@ -11,7 +12,17 @@
                 <MudText> Connected to: %TWITCHNAME%</MudText>
             </MudContainer>
             <MudContainer Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Connect Twitch</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@twitchConnectButton">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">Processing</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Connect Twitch</MudText>
+                    }
+                </MudButton>
             </MudContainer>
         </MudTabPanel>
         <MudTabPanel Text="Cheers">
@@ -20,7 +31,7 @@
                 <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Success" OnClick="CreateNewCheerRow" FullWidth="true">New</MudButton>
             </MudContainer>
             <br />
-            <MudDataGrid @ref="mudDataGridCheer" T="Cheer" Items="@TestData" ReadOnly="false" EditMode="DataGridEditMode.Cell" EditTrigger="DataGridEditTrigger.OnRowClick" SortMode="SortMode.None">
+            <MudDataGrid Loading="@isLoading" @ref="mudDataGridCheer" T="Cheer" Items="@DataCheers" ReadOnly="false" EditMode="DataGridEditMode.Cell" EditTrigger="DataGridEditTrigger.OnRowClick" SortMode="SortMode.None">
                 <Columns>
                     <PropertyColumn Property="x => x.Keyword" Required="false" />
                     <TemplateColumn>
@@ -87,7 +98,7 @@
             <MudContainer>
                 <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" FullWidth="true" Color="Color.Success" OnClick="CreateNewRedeemRow">New</MudButton>
             </MudContainer>
-            <MudDataGrid @ref="mudDataGridRedeem" T="Redeem" Items="@TestDataRedeem" ReadOnly="false" EditMode="DataGridEditMode.Cell" EditTrigger="DataGridEditTrigger.OnRowClick" SortMode="SortMode.None">
+            <MudDataGrid Loading="@isLoading" @ref="mudDataGridRedeem" T="Redeem" Items="@DataRedeems" ReadOnly="false" EditMode="DataGridEditMode.Cell" EditTrigger="DataGridEditTrigger.OnRowClick" SortMode="SortMode.None">
                 <Columns>
                     <PropertyColumn Property="x => x.Name" />
                     <PropertyColumn Property="x => x.Description" Required="false" />

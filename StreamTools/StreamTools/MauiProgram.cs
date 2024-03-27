@@ -1,17 +1,20 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
 using Serilog;
 using Serilog.Formatting.Compact;
 using Serilog.Sinks.SystemConsole.Themes;
 using StreamTools.Data;
+using StreamTools.Services;
 
 namespace StreamTools;
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-
+        if (WinUIEx.WebAuthenticator.CheckOAuthRedirectionActivation())
+        {
+            throw new InvalidOperationException("Application was started twice?!");
+        }
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .Enrich.FromLogContext()
@@ -40,16 +43,7 @@ public static class MauiProgram
             builder.Services.AddDbContextFactory<StreamToolsContext>();
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddMudServices();
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddTwitch(options =>
-                {
-                    options.ClientId = "pi2igbk4suy7h9sbyv7wj6m3cs0ght"; //TODO Do not put this here in release (dumb dumb)
-                    options.Scope.Add("channel:read:redemptions");
-                    options.Scope.Add("channel:manage:redemptions");
-                    options.Scope.Add("bits:read");
-                    options.Scope.Add("channel:read:subscriptions");
-                    options.Scope.Add("channel:read:hype_train");
-                });
+            builder.Services.AddHostedService<HTTPService>();
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
