@@ -9,10 +9,11 @@
     <MudTabs VerticalAlignment="VerticalAlignment.Top">
         <MudTabPanel Text="Account">
             <MudContainer Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-                <MudText> Connected to: %TWITCHNAME%</MudText>
+                <MudText> Connected to: @TwitchUserName</MudText>
             </MudContainer>
             <MudContainer Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@twitchConnectButton">
+                @if(!_connected){
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@twitchConnectButton" Disabled="@_processing">
                     @if (_processing)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -23,6 +24,10 @@
                         <MudText>Connect Twitch</MudText>
                     }
                 </MudButton>
+                }
+                else{
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@twitchDisconnect">Disconnect</MudButton>
+                }
             </MudContainer>
         </MudTabPanel>
         <MudTabPanel Text="Cheers">
@@ -95,10 +100,12 @@
             </MudDataGrid>
         </MudTabPanel>
         <MudTabPanel Text="Redeems">
+            <br />
             <MudContainer>
                 <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" FullWidth="true" Color="Color.Success" OnClick="CreateNewRedeemRow">New</MudButton>
             </MudContainer>
-            <MudDataGrid Loading="@isLoading" @ref="mudDataGridRedeem" T="Redeem" Items="@DataRedeems" ReadOnly="false" EditMode="DataGridEditMode.Cell" EditTrigger="DataGridEditTrigger.OnRowClick" SortMode="SortMode.None">
+            <br />
+            <MudDataGrid Loading="@isLoading" @ref="mudDataGridRedeem"  T="Redeem" Items="@DataRedeems" ReadOnly="false" EditMode="DataGridEditMode.Cell" EditTrigger="DataGridEditTrigger.OnRowClick" SortMode="SortMode.None" CommittedItemChanges="RedeemComittedItemChanges">
                 <Columns>
                     <PropertyColumn Property="x => x.Name" />
                     <PropertyColumn Property="x => x.Description" Required="false" />
@@ -153,16 +160,30 @@
                     </TemplateColumn>
                     <PropertyColumn Property="x => x.Intensity" />
                     <PropertyColumn Property="x => x.Duration" />
-                    <PropertyColumn Property="x => x.Warning">
+                    <TemplateColumn>
+                        <HeaderTemplate>
+                            Warning
+                        </HeaderTemplate>
                         <EditTemplate>
                             <MudCheckBox @bind-Value="context.Item.Warning" />
                         </EditTemplate>
-                    </PropertyColumn>
+                    </TemplateColumn>
+                    <TemplateColumn>
+                        <EditTemplate>
+                            <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="() => DeleteRedeem(context.Item)">Delete</MudButton>
+                        </EditTemplate>
+                    </TemplateColumn>
                 </Columns>
             </MudDataGrid>
         </MudTabPanel>
         <MudTabPanel Text="Subscription">
 
+        </MudTabPanel>
+        <MudTabPanel Text="Hypetrain">
+            <MudSwitch @bind-Value="@settingsService.hypeTrainEnabled" Label="Hypetrain enabled"></MudSwitch>
+            <MudSwitch @bind-Value="@settingsService.hypeTrainWarning" Label="Hypetrain vibration warning"></MudSwitch>
+            <MudNumericField T="int" @bind-Value="@settingsService.hypeTrainIntensityPerLevel" Min="0" Max="100" Label="Hypetrain Intensity per level"></MudNumericField>
+            <MudNumericField T="int" @bind-Value="@settingsService.hypeTrainDurationPerLevel" Min="0" Max="100" Label="Hypetrain Duration per level"></MudNumericField>
         </MudTabPanel>
     </MudTabs>
 </MudContainer>

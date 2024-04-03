@@ -13,11 +13,21 @@ public partial class Twitch : ComponentBase
 {
 
     [Inject]
-    private StreamToolsContext dbContext { get; set; } 
+    private StreamToolsContext dbContext { get; set; }
+
+    [Inject]
+    private TwitchService twitchService { get; set; }
+
+    [Inject]
+    private ISettingsService settingsService { get; set; }
 
     private bool[] isActive = [true, false, false];
 
-    private bool _processing = false;
+    internal bool _processing = false;
+
+    private bool _connected = false;
+
+    private string TwitchUserName {  get; set; }
 
     private void Previous()
     {
@@ -134,14 +144,66 @@ public partial class Twitch : ComponentBase
     private async Task twitchConnectButton()
     {
         _processing = true;
-        _processing = await TwitchService.LoginTwitch();
+        await twitchService.LoginTwitch();
         
     }
+    private async Task twitchDisconnect()
+    {
+        await twitchService.DisconnectTwitch();
+    }
+
+    private async Task RedeemComittedItemChanges(Redeem item)
+    {
+        
+        if(item.Id == 0)
+        {
+            dbContext.Add(item);
+            DataRedeems.Add(item);
+        }
+        else
+        {
+            //dbContext.Update(item);
+        }
+        await dbContext.SaveChangesAsync();
+        
+    }
+
+    private async Task<EventCallback> DeleteRedeem(Redeem item)
+    {
+        dbContext.Remove(item);
+        DataRedeems.Remove(item);
+        await dbContext.SaveChangesAsync();
+        return EventCallback.Empty;
+    }
+
 
     protected override async Task OnInitializedAsync()
     {
         DataRedeems = await dbContext.Redeems.ToListAsync();
         DataCheers = await dbContext.Cheers.ToListAsync();
         isLoading = false;
+        if(twitchService.TwitchUser != null)
+        {
+            _connected = true;
+            TwitchUserName = twitchService.TwitchUser.DisplayName;
+        }
+        twitchService.UserChanged += TwitchService_UserChanged;
+    }
+
+    private void TwitchService_UserChanged(object? sender, TwitchLib.Api.Helix.Models.Users.GetUsers.User? e)
+    {
+        if(e == null)
+        {
+            _processing = false;
+            _connected = false;
+            TwitchUserName = "N/A";
+        }
+        else
+        {
+            _connected = true;
+            _processing = false;
+            TwitchUserName = e.DisplayName;
+            InvokeAsync(StateHasChanged);
+        }
     }
 }

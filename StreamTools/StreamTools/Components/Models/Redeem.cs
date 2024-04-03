@@ -6,7 +6,7 @@ public sealed class Redeem
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public string Description { get; set; }
+    public string? Description { get; set; }
     public List<Shocker> Shockers { get; set; } = [];
     public OperationMethod Method { get; set; }
     public int Intensity { get; set; }

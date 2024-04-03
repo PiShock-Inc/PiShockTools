@@ -8,14 +8,15 @@
             
         </TitleContent>
         <DialogContent>
-            <MudForm>
-                <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required" Validation="@(new EmailAddressAttribute() {ErrorMessage="Invalid Email address"})" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Mail" @bind-Text="@email" />
-                <MudTextField T="string" Label="Password" Required="true" RequiredError="Password is required" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Password" @bind-Text="@password" />
-            </MudForm>
+            
         </DialogContent>
         <DialogActions>
-            <MudButton Type="ButtonType.Submit" Color="Color.Primary" Shadow="Shadow.Default" EndIcon="@Icons.Material.Filled.LockOpen">
-                Login
-            </MudButton>
         </DialogActions>
 </MudDialog>
+<script>
+    window.addEventListener("message", (event) => {
+        if (event.origin === 'https://pishock.com') {
+            DotNet.invokeMethodAsync('StreamTools', 'ReceiveMessage', event.data);
+        }
+    })
+</script>

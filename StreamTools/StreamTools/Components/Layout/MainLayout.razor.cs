@@ -5,6 +5,7 @@ namespace StreamTools.Components.Layout;
 public partial class MainLayout : LayoutComponentBase
 {
     [Inject] public IDialogService DialogService { get; set; }
+    [Inject] public NavigationManager navigationManager { get; set; }  
 
 
     private Task OpenLoginModalAsync()

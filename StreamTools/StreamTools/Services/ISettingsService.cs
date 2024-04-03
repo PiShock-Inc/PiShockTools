@@ -15,6 +15,7 @@ namespace StreamTools.Services
         bool hypeTrainEnabled { get; set; }
         int hypeTrainIntensityPerLevel { get; set; }
         int hypeTrainDurationPerLevel { get; set; }
+        bool hypeTrainWarning { get; set; }
 
     }
 }

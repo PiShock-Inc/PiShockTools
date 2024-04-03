@@ -1,12 +1,14 @@
-﻿namespace StreamTools;
+﻿using StreamTools.Services;
+
+namespace StreamTools;
 
 public partial class App : Application
 {
-    public App()
+    public App(HTTPService service, TwitchService twitch)
     {
         InitializeComponent();
 
-        MainPage = new MainPage();
+        MainPage = new MainPage(service, twitch);
     }
 
     protected override Window CreateWindow(IActivationState activationState)

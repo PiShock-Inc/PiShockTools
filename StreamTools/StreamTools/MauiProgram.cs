@@ -5,6 +5,7 @@ using Serilog.Formatting.Compact;
 using Serilog.Sinks.SystemConsole.Themes;
 using StreamTools.Data;
 using StreamTools.Services;
+using TwitchLib.EventSub.Websockets.Extensions;
 
 namespace StreamTools;
 public static class MauiProgram
@@ -17,6 +18,8 @@ public static class MauiProgram
         }
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
+            .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+            .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
             .Enrich.FromLogContext()
             .Enrich.WithThreadName()
             .Enrich.WithThreadId()
@@ -34,6 +37,7 @@ public static class MauiProgram
 
         try
         {
+            Log.Information("Initalizing application");
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -43,7 +47,14 @@ public static class MauiProgram
             builder.Services.AddDbContextFactory<StreamToolsContext>();
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddMudServices();
-            builder.Services.AddHostedService<HTTPService>();
+            builder.Services.AddScoped<ISettingsService, SettingsService>();
+#if WINDOWS
+            builder.Services.AddTwitchLibEventSubWebsockets();
+            builder.Services.AddSingleton<HTTPService>();
+            builder.Services.AddSingleton<TwitchService>();
+            builder.Services.AddSingleton<PiShockService>();
+#endif
+
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();

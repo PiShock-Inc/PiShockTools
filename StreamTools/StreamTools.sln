@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamTools", "StreamTools\StreamTools.csproj", "{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCoreStartup", "EFCoreStartup\EFCoreStartup.csproj", "{9258DD97-04B6-4ECC-9C4C-E172D2D57393}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCoreStartup", "EFCoreStartup\EFCoreStartup.csproj", "{9258DD97-04B6-4ECC-9C4C-E172D2D57393}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
