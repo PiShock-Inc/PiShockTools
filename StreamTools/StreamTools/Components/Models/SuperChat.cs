@@ -22,4 +22,8 @@ public sealed class SuperChat
         Duration = duration;
         Warning = warning;
     }
+
+    public SuperChat()
+    {
+    }
 }

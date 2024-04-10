@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamTools", "StreamTools\StreamTools.csproj", "{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCoreStartup", "EFCoreStartup\EFCoreStartup.csproj", "{9258DD97-04B6-4ECC-9C4C-E172D2D57393}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7CB7CDF7-8F63-4E7B-8E49-20BE9FA4B189}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{9258DD97-04B6-4ECC-9C4C-E172D2D57393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9258DD97-04B6-4ECC-9C4C-E172D2D57393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9258DD97-04B6-4ECC-9C4C-E172D2D57393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9258DD97-04B6-4ECC-9C4C-E172D2D57393}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

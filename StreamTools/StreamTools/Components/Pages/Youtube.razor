@@ -1,123 +1,90 @@
 ﻿@page "/youtube"
 @using StreamTools.Components.Models
 @using StreamTools.Components.Models.Enums
+@namespace StreamTools.Components.Pages
 
-<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-	<Pagination VerticalAlignment="VerticalAlignment.Top">
-		<PaginationItem Disabled="@isActive.First()" @onclick="Previous">
-			<PaginationLink>
-				<span aria-hidden="true">«</span>
-			</PaginationLink>
-		</PaginationItem>
-		<PaginationItem Active="@isActive[0]">
-			<PaginationLink Page="1" Clicked="SetActive">
-				Account
-			</PaginationLink>
-		</PaginationItem>
-		<PaginationItem Active="@isActive[1]">
-			<PaginationLink Page="2" Clicked="SetActive">
-				SuperChats
-			</PaginationLink>
-		</PaginationItem>
-		<PaginationItem Disabled="@isActive.Last()" @onclick="Next">
-			<PaginationLink>
-				<span aria-hidden="true">»</span>
-			</PaginationLink>
-		</PaginationItem>
-	</Pagination>
-</Container>
-<br />
-@if(!IsNotActive(0))
-{
-	<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-		<Paragraph> Connected to: %YOUTUBENAME%</Paragraph>
-	</Container>
-	<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-		<Button Color="Color.Primary">Connect Youtube</Button>
-	</Container>
-}
-@if(!IsNotActive(1)){
-<Container Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-    <Paragraph TextColor="TextColor.Light">Cheers</Paragraph>
-</Container>
-<Button Color="Color.Success" Clicked="SuperchatCreateRow">New</Button>
-<DataGrid @ref="superchatGrid"
-          TItem="SuperChat"
-          CommandMode="DataGridCommandMode.Commands"
-          Editable
-          EditMode="DataGridEditMode.Cell"
-          Data="@TestData"
-          Responsive
-          HeaderThemeContrast="ThemeContrast.Dark"
-          ShowPager
-          Sortable=false
-          Class="bg-transparent text-light"
-          Borderless>
-    <ButtonRowTemplate>
-        <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
-    </ButtonRowTemplate>
-    <DataGridColumns>
-        <DataGridColumn Field="@nameof(SuperChat.Keyword)" Caption="Keyword" Editable />
-        <DataGridColumn Field="@nameof(SuperChat.Shockers)" Caption="Shockers" Editable>
-            <EditTemplate>
-                <DropdownList TItem="Shocker"
-                              Data="@TestShockers"
-                              TextField="(item) => item.Name"
-                              ValueField="(item) => item"
-                              SelectionMode="DropdownListSelectionMode.Checkbox"
-                              SelectedValues="@((List<Shocker>)context.CellValue)"
-                              SelectedValuesChanged="@( v => context.CellValue = v)"
-                              TValue="Shocker">
-                    @{
-                        var text = "";
-                        var value = context.CellValue as List<Shocker> ?? [];
-                        if (!value.Any())
-                        {
-                            text = "Select shocker";
-                        }
-                        else
-                        {
-                            text = string.Join(", ", value.OrderBy(x => x.Name).Select(s => s.Name));
-                        }
-                    }
-                </DropdownList>
-            </EditTemplate>
-            <DisplayTemplate>
-                @{
-                    var value = context.Shockers;
-                    @string.Join(", ", value.OrderBy(s => s.Name).Select(s => s.Name))
-                    ;
-                }
-            </DisplayTemplate>
-        </DataGridColumn>
-        <DataGridSelectColumn Field="@nameof(SuperChat.Method)" Caption="Method" Data="@MethodItems" ValueField="(x) => ((OperationMethod)x)" TextField="(x) => ((OperationMethod) x).GetName()" Editable />
-        <DataGridCheckColumn Field="@nameof(SuperChat.Warning)" Caption="Warning vibration" Editable />
-        <DataGridNumericColumn Field="@nameof(SuperChat.MinimumAmount)" Caption="Minimum Cheer" Editable />
-        <DataGridNumericColumn Field="@nameof(SuperChat.Intensity)" Caption="Intensity" Editable />
-        <DataGridNumericColumn Field="@nameof(SuperChat.Duration)" Caption="Duration" Editable />
-        <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="true" CancelCommandAllowed>
-            <SaveCommandTemplate>
-                <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
-            </SaveCommandTemplate>
-            <CancelCommandTemplate>
-                <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
-            </CancelCommandTemplate>
-            <DeleteCommandTemplate>
-                <Button ElementId="btnDelete" Color="Color.Danger" Clicked="@context.Clicked">@context.LocalizationString</Button>
-            </DeleteCommandTemplate>
-        </DataGridCommandColumn>
-    </DataGridColumns>
-          <EmptyTemplate>
-              <Card>
-                  <CardBody>
-                      <CardText>
-                          No SuperChats to display...
-                      </CardText>
-                  </CardBody>
-              </Card>
-          </EmptyTemplate>
-          <LoadingTemplate>
-              <SpinKit Type="SpinKitType.Plane" />
-          </LoadingTemplate>
-</DataGrid>
-}
+
+<MudContainer Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+    <MudTabs VerticalAlignment="VerticalAlignment.Top">
+        <MudTabPanel Text="Account">
+            <MudContainer Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+                <MudText> Connected to: %YTNAME%</MudText>
+            </MudContainer>
+            <MudContainer Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+                <MudButton Color="Color.Primary">Connect Youtube</MudButton>
+            </MudContainer>
+        </MudTabPanel>
+        <MudTabPanel Text="Superchats">
+            <MudContainer Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+            </MudContainer>
+            <MudButton Color="Color.Success" OnClick="SuperchatCreateRow">New</MudButton>
+            <MudDataGrid @ref="superChatDatagrid" T="SuperChat" Items="@TestData" ReadOnly="false" EditMode="DataGridEditMode.Cell" EditTrigger="DataGridEditTrigger.OnRowClick" SortMode="SortMode.None">
+                <Columns>
+                    <PropertyColumn Property="x => x.Keyword" Required="false" />
+                    <TemplateColumn>
+                        <HeaderTemplate>
+                            Shockers
+                        </HeaderTemplate>
+                        <CellTemplate >
+                            <MudText>
+                                @{
+                                    var text = "";
+                                    var value = context.Item.Shockers as List<Shocker> ?? [];
+
+                                    if (!value.Any())
+                                    {
+                                    }
+                                    if (value != null)
+                                    {
+                                        text = String.Join(", ", ((List<Shocker>)context.Item.Shockers).OrderBy(s => s.Name).Select(s => s.Name));
+                                    }
+                                    else
+                                    {
+                                        text = "Select shocker";
+
+                                    }
+                                    @text
+                                }
+                            </MudText>
+                        </CellTemplate>
+                        <EditTemplate>
+                            <MudSelect T="Shocker" Label="Shockers" MultiSelection SelectedValues="@context.Item.Shockers.OrderBy(s => s.Name)" SelectedValuesChanged="(values) => OnShockerSelectItemsChanged(context.Item, values)" ToStringFunc="@((shocker) => shocker.Name)">
+                                @foreach (Shocker shocker in TestShockers)
+                                {
+                                    <MudSelectItem Value="@shocker">@shocker.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </EditTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x => x.MinimumAmount">
+                        <HeaderTemplate>
+                            Minimum amount
+                        </HeaderTemplate>
+                    </PropertyColumn>
+                    <TemplateColumn>
+                        <HeaderTemplate>Operation method</HeaderTemplate>
+                        <CellTemplate>
+                            <MudText>@context.Item.Method.GetName()</MudText>
+                        </CellTemplate>
+                        <EditTemplate>
+
+                            <MudSelect T="OperationMethod" @bind-Value="@context.Item.Method" Label="Operation" >
+                                @foreach (OperationMethod method in Enum.GetValues(typeof(OperationMethod)))
+                                {
+                                    <MudSelectItem Value="method">@method.GetName()</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </EditTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x => x.Intensity" />
+                    <PropertyColumn Property="x => x.Duration" />
+                    <PropertyColumn Property="x => x.Warning">
+                        <EditTemplate>
+                            <MudCheckBox @bind-Value="context.Item.Warning" Label="Warning" />
+                        </EditTemplate>
+                    </PropertyColumn>
+                </Columns>
+            </MudDataGrid>
+        </MudTabPanel>
+    </MudTabs>
+</MudContainer>

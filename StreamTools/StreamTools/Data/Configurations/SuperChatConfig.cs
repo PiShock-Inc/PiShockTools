@@ -11,5 +11,6 @@ internal sealed class SuperChatConfig : IEntityTypeConfiguration<SuperChat>
         builder.ToTable("Superchats");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.HasMany(x => x.Shockers).WithMany();
     }
 }

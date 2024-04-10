@@ -12,5 +12,7 @@ internal sealed class RedeemConfig : IEntityTypeConfiguration<Redeem>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
         builder.Property(x => x.Name).IsRequired();
+        builder.Property(x => x.Description).IsRequired(false);
+        builder.HasMany(x => x.Shockers).WithMany();
     }
 }

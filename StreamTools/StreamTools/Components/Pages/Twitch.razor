@@ -1,255 +1,189 @@
 ﻿@page "/twitch"
 @using StreamTools.Components.Models
 @using StreamTools.Components.Models.Enums
+@using StreamTools.Services
 @namespace StreamTools.Components.Pages
 
 
-<Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-    <Pagination VerticalAlignment="VerticalAlignment.Top">
-        <PaginationItem Disabled="@isActive.First()" @onclick="Previous">
-            <PaginationLink>
-                <span aria-hidden="true">«</span>
-            </PaginationLink>
-        </PaginationItem>
-        <PaginationItem Active="@isActive[0]">
-            <PaginationLink Page="1" Clicked="SetActive">
-                Account
-            </PaginationLink>
-        </PaginationItem>
-        <PaginationItem Active="@isActive[1]">
-            <PaginationLink Page="2" Clicked="SetActive">
-                Cheers
-            </PaginationLink>
-        </PaginationItem>
-        <PaginationItem Active="@isActive[2]">
-            <PaginationLink Page="3" Clicked="SetActive">
-                Redeems
-            </PaginationLink>
-        </PaginationItem>
-        <PaginationItem Disabled="@isActive.Last()" @onclick="Next">
-            <PaginationLink>
-                <span aria-hidden="true">»</span>
-            </PaginationLink>
-        </PaginationItem>
-    </Pagination>
-</Container>
-<br />
-@if (!IsNotActive(0))
-{
-    <Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-        <Paragraph TextColor="TextColor.Light"> Connected to: %TWITCHNAME%</Paragraph>
-    </Container>
-    <Container Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-        <Button Color="Color.Primary">Connect Twitch</Button>
-    </Container>
-}
-@if (!IsNotActive(1))
-{
-    <Container Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-        <Paragraph TextColor="TextColor.Light">Cheers</Paragraph>
-    </Container>
-    <Button Color="Color.Success" Clicked="CheerNewRow">New</Button>
-    <DataGrid @ref="cheerGrid"
-              TItem="Cheer"
-              CommandMode="DataGridCommandMode.Commands"
-              Editable
-              EditMode="DataGridEditMode.Cell"
-              Data="@TestData"
-              Responsive
-              HeaderThemeContrast="ThemeContrast.Dark"
-              ShowPager
-              Sortable=false
-              Class="bg-transparent text-light"
-              Borderless>
-        <ButtonRowTemplate>
-            <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
-        </ButtonRowTemplate>
-        <DataGridColumns>
-
-            <DataGridColumn Field="@nameof(Cheer.Keyword)" Caption="Keyword" Editable />
-            <DataGridColumn Field="@nameof(Cheer.Shockers)" Caption="Shockers" Editable>
-                <EditTemplate>
-                    <DropdownList TItem="Shocker"
-                                  Data="@TestShockers"
-                                  TextField="(item) => item.Name"
-                                  ValueField="(item) => item"
-                                  SelectionMode="DropdownListSelectionMode.Checkbox"
-                                  SelectedValues="@((List<Shocker>)context.CellValue)"
-                                  SelectedValuesChanged="@( v => context.CellValue = v)"
-                                  TValue="Shocker">
-                        @{
-                            var text = "";
-                            var value = context.CellValue as List<Shocker> ?? [];
-                            if (!value.Any())
-                            {
-                                text = "Select shocker";
-                            }
-                            else
-                            {
-                                text = string.Join(", ", value.OrderBy(x => x.Name).Select(s => s.Name));
-                            }
-                        }
-                    </DropdownList>
-                </EditTemplate>
-                <DisplayTemplate>
-                    @{
-                        var value = context.Shockers;
-                        @string.Join(", ", value.OrderBy(s => s.Name).Select(s => s.Name))
-                        ;
-                    }
-                </DisplayTemplate>
-            </DataGridColumn>
-            <DataGridSelectColumn Field="@nameof(Cheer.Method)" Caption="Method" Data="@MethodItems" ValueField="(x) => ((OperationMethod)x)" TextField="(x) => ((OperationMethod) x).GetName()" Editable />
-            <DataGridCheckColumn Field="@nameof(Cheer.Warning)" Caption="Warning vibration" Editable>
-                <DisplayTemplate>
-                    <Check @bind-Checked="@context.Warning" Background="Background.Secondary" />
-                </DisplayTemplate>
-            </DataGridCheckColumn>
-            <DataGridNumericColumn Field="@nameof(Cheer.MinimumCheer)" Caption="Minimum Cheer" Editable />
-            <DataGridNumericColumn Field="@nameof(Cheer.Intensity)" Caption="Intensity" Editable />
-            <DataGridNumericColumn Field="@nameof(Cheer.Duration)" Caption="Duration" Editable />
-            <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="true" CancelCommandAllowed>
-                <SaveCommandTemplate>
-                    <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
-                </SaveCommandTemplate>
-                <CancelCommandTemplate>
-                    <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
-                </CancelCommandTemplate>
-                <DeleteCommandTemplate>
-                    <Button ElementId="btnDelete" Color="Color.Danger" Clicked="@context.Clicked">@context.LocalizationString</Button>
-                </DeleteCommandTemplate>
-            </DataGridCommandColumn>
-        </DataGridColumns>
-        <EmptyTemplate>
-            <Card>
-                <CardBody Background="Background.Transparent" Shadow="Shadow.Default">
-                    <CardText>
-                        No Cheers to display...
-                    </CardText>
-                </CardBody>
-            </Card>
-        </EmptyTemplate>
-        <LoadingTemplate>
-            <SpinKit Type="SpinKitType.Plane" />
-        </LoadingTemplate>
-    </DataGrid>
-}
-@if (!IsNotActive(2))
-{
-    <Container Fluid VerticalAlignment="VerticalAlignment.Default" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
-        <Paragraph>Redeems</Paragraph>
-    </Container>
-    <Button Color="Color.Success" Clicked="RedeemNewRow">New</Button>
-    <DataGrid @ref="redeemGrid"
-              TItem="Redeem"
-              CommandMode="DataGridCommandMode.Commands"
-              Editable
-              EditMode="DataGridEditMode.Cell"
-              Data="@TestDataRedeem"
-              Responsive
-              HeaderThemeContrast="ThemeContrast.Dark"
-              ShowPager
-              Sortable=false
-              Class="bg-transparent text-light"
-              Borderless>
-        <ButtonRowTemplate>
-            <Button Color="Color.Success" Clicked="context.NewCommand.Clicked">New</Button>
-        </ButtonRowTemplate>
-        <DataGridColumns>
-            <DataGridColumn Field="@nameof(Redeem.Name)" Caption="Redeem name" Editable />
-            <DataGridColumn Field="@nameof(Redeem.Description)" Caption="Description" Editable />
-            <DataGridColumn Field="@nameof(Redeem.Shockers)" Caption="Shockers" Editable>
-                <EditTemplate>
-                    <DropdownList TItem="Shocker"
-                                  Data="@TestShockers"
-                                  TextField="(item) => item.Name"
-                                  ValueField="(item) => item"
-                                  SelectionMode="DropdownListSelectionMode.Checkbox"
-                                  SelectedValues="@((List<Shocker>)context.CellValue)"
-                                  SelectedValuesChanged="@( v => context.CellValue = v)"
-                                  TValue="Shocker">
-                        @{
-                            var text = "";
-                            var value = context.CellValue as List<Shocker> ?? [];
-
-                            if (!value.Any())
-                            {
-                            }
-                            if (value != null)
-                            {
-                                text = String.Join(", ", ((List<Shocker>)context.CellValue).OrderBy(s => s.Name).Select(s => s.Name));
-                            }
-                            else
-                            {
-                                text = "Select shocker";
-
-                            }
-                            @text
-                        }
-                    </DropdownList>
-                </EditTemplate>
-                <DisplayTemplate>
-                    @{
-                        var value = context.Shockers;
-                        @string.Join(", ", value.OrderBy(s => s.Name).Select(s => s.Name))
-                        ;
-                    }
-                </DisplayTemplate>
-            </DataGridColumn>
-            <DataGridSelectColumn Field="@nameof(Redeem.Method)" Caption="Method" Data="@MethodItems" ValueField="(x) => ((OperationMethod)x)" TextField="(x) => ((OperationMethod) x).GetName()" Editable />
-            <DataGridCheckColumn Field="@nameof(Redeem.Warning)" Caption="Warning vibration" Editable />
-            <DataGridNumericColumn Field="@nameof(Redeem.Intensity)" Caption="Intensity" Editable />
-            <DataGridNumericColumn Field="@nameof(Redeem.Duration)" Caption="Duration" Editable />
-            <DataGridCommandColumn NewCommandAllowed="false" EditCommandAllowed="false" DeleteCommandAllowed="true" CancelCommandAllowed>
-                <SaveCommandTemplate>
-                    <Button ElementId="btnSave" Type="ButtonType.Submit" PreventDefaultOnSubmit Color="Color.Primary" Clicked="@context.Clicked">@context.LocalizationString</Button>
-                </SaveCommandTemplate>
-                <CancelCommandTemplate>
-                    <Button ElementId="btnCancel" Color="Color.Secondary" Clicked="@context.Clicked">@context.LocalizationString</Button>
-                </CancelCommandTemplate>
-                <DeleteCommandTemplate>
-                    <Button ElementId="btnDelete" Color="Color.Danger" Clicked="@context.Clicked">@context.LocalizationString</Button>
-                </DeleteCommandTemplate>
-            </DataGridCommandColumn>
-        </DataGridColumns>
-        <PageButtonTemplate>
-            <Span TextColor="TextColor.Success">
-                @context.PageNumber
-            </Span>
-        </PageButtonTemplate>
-        <NextPageButtonTemplate><Icon Name="IconName.StepForward" TextColor="TextColor.Success" /></NextPageButtonTemplate>
-        <PreviousPageButtonTemplate><Icon Name="IconName.StepBackward" TextColor="TextColor.Success" /></PreviousPageButtonTemplate>
-        <LastPageButtonTemplate><Icon Name="IconName.Forward" TextColor="TextColor.Success" /></LastPageButtonTemplate>
-        <FirstPageButtonTemplate><Icon Name="IconName.Backward" TextColor="TextColor.Success" /></FirstPageButtonTemplate>
-        <TotalItemsTemplate></TotalItemsTemplate>
-        <TotalItemsShortTemplate></TotalItemsShortTemplate>
-        <ItemsPerPageTemplate></ItemsPerPageTemplate>
-        <PageSelectorTemplate>
-            <Div Flex="Flex.AlignSelf.Center">
-                <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPage" Size="Size.Small">
-                    @for (int i = context.FirstVisiblePage; i <= context.LastVisiblePage; ++i)
+<MudContainer Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+    <MudTabs VerticalAlignment="VerticalAlignment.Top">
+        <MudTabPanel Text="Account">
+            <MudContainer Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+                <MudText> Connected to: @TwitchUserName</MudText>
+            </MudContainer>
+            <MudContainer Fluid VerticalAlignment="VerticalAlignment.Middle" Flex="Flex.AlignContent.Center.JustifyContent.Center.Shrink.Is1">
+                @if(!_connected){
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@twitchConnectButton" Disabled="@_processing">
+                    @if (_processing)
                     {
-                        var pageNumber = i;
-                        <SelectItem Value="@pageNumber">@pageNumber</SelectItem>
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">Processing</MudText>
                     }
-                </Select>
-            </Div>
-        </PageSelectorTemplate>
-        <PageSizesTemplate>
-            <Select TextColor="TextColor.Success" @bind-SelectedValue="@context.CurrentPageSize" Size="Size.Small">
-            </Select>
-        </PageSizesTemplate>
-        <EmptyTemplate>
-            <Card>
-                <CardBody>
-                    <CardText>
-                        No Redeems to display...
-                    </CardText>
-                </CardBody>
-            </Card>
-        </EmptyTemplate>
-        <LoadingTemplate>
-            <SpinKit Type="SpinKitType.Plane" />
-        </LoadingTemplate>
-    </DataGrid>
-}
+                    else
+                    {
+                        <MudText>Connect Twitch</MudText>
+                    }
+                </MudButton>
+                }
+                else{
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="@twitchDisconnect">Disconnect</MudButton>
+                }
+            </MudContainer>
+        </MudTabPanel>
+        <MudTabPanel Text="Cheers">
+            <br />
+            <MudContainer>
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Success" OnClick="CreateNewCheerRow" FullWidth="true">New</MudButton>
+            </MudContainer>
+            <br />
+            <MudDataGrid Loading="@isLoading" @ref="mudDataGridCheer" T="Cheer" Items="@DataCheers" ReadOnly="false" EditMode="DataGridEditMode.Cell" EditTrigger="DataGridEditTrigger.OnRowClick" SortMode="SortMode.None">
+                <Columns>
+                    <PropertyColumn Property="x => x.Keyword" Required="false" />
+                    <TemplateColumn>
+                        <HeaderTemplate>
+                            Shockers
+                        </HeaderTemplate>
+                        <CellTemplate>
+                            <MudText>
+                                @{
+                                    var text = "";
+                                    var value = context.Item.Shockers as List<Shocker> ?? [];
+
+                                    if (!value.Any())
+                                    {
+                                    }
+                                    if (value != null)
+                                    {
+                                        text = String.Join(", ", ((List<Shocker>)context.Item.Shockers).OrderBy(s => s.Name).Select(s => s.Name));
+                                    }
+                                    else
+                                    {
+                                        text = "Select shocker";
+
+                                    }
+                                    @text
+                                }
+                            </MudText>
+                        </CellTemplate>
+                        <EditTemplate>
+                            <MudSelect T="Shocker" MultiSelection SelectedValues="@context.Item.Shockers.OrderBy(s => s.Name)" SelectedValuesChanged="(values) => OnShockerSelectItemsChanged(context.Item, values)" ToStringFunc="@((shocker) => shocker.Name)">
+                                @foreach (Shocker shocker in TestShockers)
+                                {
+                                    <MudSelectItem Value="@shocker">@shocker.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </EditTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x => x.MinimumCheer" />
+                    <TemplateColumn>
+                        <HeaderTemplate>Operation method</HeaderTemplate>
+                        <CellTemplate>
+                            <MudText>@context.Item.Method.GetName()</MudText>
+                        </CellTemplate>
+                        <EditTemplate>
+                            <MudSelect T="OperationMethod" @bind-Value="@context.Item.Method">
+                                @foreach (OperationMethod method in Enum.GetValues(typeof(OperationMethod)))
+                                {
+                                    <MudSelectItem Value="method">@method.GetName()</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </EditTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x => x.Intensity" />
+                    <PropertyColumn Property="x => x.Duration" />
+                    <PropertyColumn Property="x => x.Warning">
+                        <EditTemplate>
+                            <MudCheckBox @bind-Value="context.Item.Warning" />
+                        </EditTemplate>
+                    </PropertyColumn>
+                </Columns>
+            </MudDataGrid>
+        </MudTabPanel>
+        <MudTabPanel Text="Redeems">
+            <br />
+            <MudContainer>
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" FullWidth="true" Color="Color.Success" OnClick="CreateNewRedeemRow">New</MudButton>
+            </MudContainer>
+            <br />
+            <MudDataGrid Loading="@isLoading" @ref="mudDataGridRedeem"  T="Redeem" Items="@DataRedeems" ReadOnly="false" EditMode="DataGridEditMode.Cell" EditTrigger="DataGridEditTrigger.OnRowClick" SortMode="SortMode.None" CommittedItemChanges="RedeemComittedItemChanges">
+                <Columns>
+                    <PropertyColumn Property="x => x.Name" />
+                    <PropertyColumn Property="x => x.Description" Required="false" />
+                    <TemplateColumn>
+                        <HeaderTemplate>
+                            Shockers
+                        </HeaderTemplate>
+                        <CellTemplate>
+                            <MudText>
+                                @{
+                                    var text = "";
+                                    var value = context.Item.Shockers as List<Shocker> ?? [];
+
+                                    if (!value.Any())
+                                    {
+                                    }
+                                    if (value != null)
+                                    {
+                                        text = String.Join(", ", ((List<Shocker>)context.Item.Shockers).OrderBy(s => s.Name).Select(s => s.Name));
+                                    }
+                                    else
+                                    {
+                                        text = "Select shocker";
+
+                                    }
+                                    @text
+                                }
+                            </MudText>
+                        </CellTemplate>
+                        <EditTemplate>
+                            <MudSelect T="Shocker" MultiSelection SelectedValues="@context.Item.Shockers.OrderBy(s => s.Name)" SelectedValuesChanged="(values) => OnShockerSelectItemsChanged(context.Item, values)" ToStringFunc="@((shocker) => shocker.Name)">
+                                @foreach (Shocker shocker in TestShockers)
+                                {
+                                    <MudSelectItem Value="@shocker">@shocker.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </EditTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn>
+                        <HeaderTemplate>Operation method</HeaderTemplate>
+                        <CellTemplate>
+                            <MudText>@context.Item.Method.GetName()</MudText>
+                        </CellTemplate>
+                        <EditTemplate>
+                            <MudSelect T="OperationMethod" @bind-Value="@context.Item.Method">
+                                @foreach (OperationMethod method in Enum.GetValues(typeof(OperationMethod)))
+                                {
+                                    <MudSelectItem Value="method">@method.GetName()</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </EditTemplate>
+                    </TemplateColumn>
+                    <PropertyColumn Property="x => x.Intensity" />
+                    <PropertyColumn Property="x => x.Duration" />
+                    <TemplateColumn>
+                        <HeaderTemplate>
+                            Warning
+                        </HeaderTemplate>
+                        <EditTemplate>
+                            <MudCheckBox @bind-Value="context.Item.Warning" />
+                        </EditTemplate>
+                    </TemplateColumn>
+                    <TemplateColumn>
+                        <EditTemplate>
+                            <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="() => DeleteRedeem(context.Item)">Delete</MudButton>
+                        </EditTemplate>
+                    </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
+        </MudTabPanel>
+        <MudTabPanel Text="Subscription">
+
+        </MudTabPanel>
+        <MudTabPanel Text="Hypetrain">
+            <MudSwitch @bind-Value="@settingsService.hypeTrainEnabled" Label="Hypetrain enabled"></MudSwitch>
+            <MudSwitch @bind-Value="@settingsService.hypeTrainWarning" Label="Hypetrain vibration warning"></MudSwitch>
+            <MudNumericField T="int" @bind-Value="@settingsService.hypeTrainIntensityPerLevel" Min="0" Max="100" Label="Hypetrain Intensity per level"></MudNumericField>
+            <MudNumericField T="int" @bind-Value="@settingsService.hypeTrainDurationPerLevel" Min="0" Max="100" Label="Hypetrain Duration per level"></MudNumericField>
+        </MudTabPanel>
+    </MudTabs>
+</MudContainer>

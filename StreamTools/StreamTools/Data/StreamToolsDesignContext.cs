@@ -5,6 +5,10 @@ namespace StreamTools.Data;
 
 internal class StreamToolsDesignContext : IDesignTimeDbContextFactory<StreamToolsContext>
 {
+    public StreamToolsDesignContext()
+    {
+
+    }
     public StreamToolsContext CreateDbContext(string[] args)
     {
         var options = new DbContextOptionsBuilder<StreamToolsContext>()

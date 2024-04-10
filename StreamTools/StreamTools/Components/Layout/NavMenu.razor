@@ -1,4 +1,4 @@
-﻿<Bar ThemeContrast="ThemeContrast.Dark"
+﻿@* <Bar ThemeContrast="ThemeContrast.Dark"
      Mode="BarMode.VerticalSmall"
      CollapseMode="BarCollapseMode.Small"
      Breakpoint="Breakpoint.Tablet">
@@ -29,3 +29,9 @@
         </BarStart>
     </BarMenu>
 </Bar>
+ *@
+ <MudNavMenu>
+     <MudNavLink Href="/twitch" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Stream">Twitch</MudNavLink>
+     <MudNavLink Href="/youtube" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.VideoCameraFront">Youtube</MudNavLink>
+ </MudNavMenu>
+

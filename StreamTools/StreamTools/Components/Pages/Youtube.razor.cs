@@ -1,13 +1,7 @@
-﻿using Blazorise;
-using Blazorise.DataGrid;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using StreamTools.Components.Models;
 using StreamTools.Components.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StreamTools.Components.Pages
 {
@@ -61,13 +55,11 @@ namespace StreamTools.Components.Pages
             return !isActive[id];
         }
 
-        private List<object> MethodItems = Enum.GetValues<OperationMethod>().Select(x => (object)x).ToList();
+        private MudDataGrid<SuperChat> superChatDatagrid;
 
-        private DataGrid<SuperChat> superchatGrid;
-
-        public async Task SuperchatCreateRow()
+        private async Task SuperchatCreateRow()
         {
-            await superchatGrid.New();
+            await superChatDatagrid.SetEditingItemAsync(new SuperChat());
         }
 
         public static List<Shocker> TestShockers =
@@ -77,6 +69,11 @@ namespace StreamTools.Components.Pages
         new("Shocker 3", "3"),
         new("Shocker 4", "4")
         ];
+
+        private void OnShockerSelectItemsChanged(SuperChat item, IEnumerable<Shocker> newValues)
+        {
+            item.Shockers = newValues.ToList();
+        }
 
         public List<SuperChat> TestData = new()
         {

@@ -11,5 +11,6 @@ internal sealed class CheerConfig : IEntityTypeConfiguration<Cheer>
         builder.ToTable("Cheers");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.HasMany(x => x.Shockers).WithMany();
     }
 }

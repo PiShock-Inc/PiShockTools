@@ -1,12 +1,19 @@
-﻿using Blazorise;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace StreamTools.Components.Layout;
 public partial class MainLayout : LayoutComponentBase
 {
-    [Inject] public IModalService ModalService { get; set; }
+    [Inject] public IDialogService DialogService { get; set; }
+    [Inject] public NavigationManager navigationManager { get; set; }  
 
 
     private Task OpenLoginModalAsync()
-    => ModalService.Show<Login>("Login To Your Account");
+    => DialogService.ShowAsync<Login>();
+
+    bool open = false;
+    void ToggleDrawer()
+    {
+        open = !open;
+    }
 }
